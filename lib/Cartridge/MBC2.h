@@ -18,6 +18,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <SD.h>
 
 #include "ACartridge.h"
 
@@ -31,7 +32,7 @@
 
 class MBC2 : public ACartridge {
    public:
-    MBC2(const char* romFile);
+    MBC2(File romFile);
     ~MBC2();
     uint8_t readByte(uint16_t addr) override;
     void writeByte(uint16_t addr, uint8_t data) override;

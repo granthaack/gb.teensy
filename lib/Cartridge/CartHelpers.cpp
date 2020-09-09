@@ -138,6 +138,13 @@ uint8_t lookupMbcTypeFromCart(const char* romFile) {
     return ret;
 }
 
+
+uint8_t lookupMbcTypeFromCart(File romFile) {
+    // Get the cartridge code
+    romFile.seek(CART_CODE);
+    return lookupMbcType(romFile.read());
+}
+
 uint16_t lookupRamBankSize(uint8_t code) {
     switch (code) {
         case 0x0:
@@ -357,4 +364,53 @@ const char* lookupMBCTypeString(uint8_t code) {
         default:
             return unknown;
     }
+}
+
+void getRomFileName(const char* romFile, char* buf){
+    // Find the game name in the ROM file
+    File dataFile = SD.open(romFile);
+    dataFile.seek(CART_NAME);
+    for (uint8_t i = 0; i < 16; i++) {
+        // Copy it to the buffer
+        buf[i] = dataFile.read();
+    }
+    // Null terminate the string
+    buf[16] = '\0';
+    dataFile.close();
+}
+
+void getRomFileName(File romFile, char* buf){
+    // Find the game name in the ROM file
+    romFile.seek(CART_NAME);
+    for (uint8_t i = 0; i < 16; i++) {
+        // Copy it to the buffer
+        buf[i] = romFile.read();
+    }
+    // Null terminate the string
+    buf[16] = '\0';
+}
+
+bool checkValidRomFile(File romFile){
+    // Check to see if the Big N's logo is
+    // in the cartridge header. We can't do
+    // a one for one comparison since that 
+    // bitmap is copyright, so check the 
+    // djb2 hash of it instead
+    romFile.seek(BIGN_LOGO);
+    uint32_t hash = 5381;
+    for(uint8_t i = 0; i < 48; i++){
+        hash = ((hash << 5) + hash) + romFile.read();
+    }
+    return hash == 1726737995;
+}
+
+bool checkValidRomFile(const char* romFile){
+    File dataFile = SD.open(romFile);
+    dataFile.seek(BIGN_LOGO);
+    uint32_t hash = 5381;
+    for(uint8_t i = 0; i < 48; i++){
+        hash = ((hash << 5) + hash) + dataFile.read();
+    }
+    dataFile.close();
+    return hash == 1726737995;
 }

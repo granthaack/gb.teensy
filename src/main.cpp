@@ -20,10 +20,12 @@
 #include <Arduino.h>
 #include <CPU.h>
 #include <Cartridge.h>
+#include <CartHelpers.h>
 #include <FT81x.h>
 #include <Joypad.h>
 #include <Memory.h>
 #include <PPU.h>
+#include <Menu.h>
 
 void waitForKeyPress();
 void printDiagnostics();
@@ -46,7 +48,7 @@ void setup() {
 
     Serial.printf("\nStart Gameboy...\n");
 
-    Cartridge::begin("mario.gb");
+    Cartridge::begin(menuBegin(ft81x));
     Cartridge::getGameName(title);
 
     Memory::initMemory();

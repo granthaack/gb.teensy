@@ -17,6 +17,8 @@
  **/
 #include <Arduino.h>
 
+#include <SD.h>
+
 // Defines I made to differentiate memory bank controllers
 #define USES_NOMBC      0x0
 #define USES_MBC1       0x1
@@ -36,6 +38,7 @@
 #define ROM_CODE      0x148
 #define CART_CODE     0x147
 #define CART_NAME     0x134
+#define BIGN_LOGO     0X104
 #define ROM_BANK_SIZE 0x4000
 
 // Cartridge Memory Regions
@@ -45,6 +48,7 @@
 
 uint8_t lookupMbcType(uint8_t code);
 uint8_t lookupMbcTypeFromCart(const char* romFile);
+uint8_t lookupMbcTypeFromCart(File romFile);
 uint16_t lookupRamBankSize(uint8_t code);
 uint32_t lookupRomSize(uint8_t code);
 uint32_t lookupRamSize(uint8_t code);
@@ -52,3 +56,7 @@ uint16_t lookupRomBanks(uint8_t code);
 uint8_t lookupRamBanks(uint8_t code);
 const char* lookupCartType(uint8_t code);
 const char* lookupMBCTypeString(uint8_t code);
+void getRomFileName(const char* romFile, char* buf);
+void getRomFileName(File romFile, char* buf);
+bool checkValidRomFile(const char* romFile);
+bool checkValidRomFile(File romFile);

@@ -20,7 +20,7 @@
 #include <Arduino.h>
 #include <stdlib.h>
 
-MBC1::MBC1(const char *romFile) : ACartridge(romFile) {
+MBC1::MBC1(File romFile) : ACartridge(romFile) {
     // Initialize the control registers
     ramEnable = 0x0;
     primaryBankBits = 0x1;  // Defaults to bank 1 on PoR
@@ -35,15 +35,10 @@ MBC1::MBC1(const char *romFile) : ACartridge(romFile) {
 
     // Write the ROM data to memory
     Serial.println("Loading ROM into memory...");
-    File dataFile = SD.open(romFile);
-    if (dataFile) {
-        for (uint8_t i = 0; i < romBankCount + 1; i++) {
-            for (uint16_t j = 0; j < ROM_BANK_SIZE; j++) {
-                romBanks[i][j] = dataFile.read();
-            }
+    for (uint8_t i = 0; i < romBankCount + 1; i++) {
+        for (uint16_t j = 0; j < ROM_BANK_SIZE; j++) {
+            romBanks[i][j] = romFile.read();
         }
-    } else {
-        Serial.printf("Could not open rom file %s\n", romFile);
     }
     Serial.println();
     Serial.println("ROM Loaded!");

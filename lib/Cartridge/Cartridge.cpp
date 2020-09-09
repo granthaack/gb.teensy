@@ -26,7 +26,7 @@
 
 ACartridge* Cartridge::cart = 0;
 
-uint8_t Cartridge::begin(const char* romFile) {
+uint8_t Cartridge::begin(File romFile) {
     uint8_t mbcType = lookupMbcTypeFromCart(romFile);
     if (mbcType == USES_NOMBC) {
         cart = new NoMBC(romFile);

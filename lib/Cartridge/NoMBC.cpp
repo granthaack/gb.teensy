@@ -22,19 +22,14 @@
 #include <SPI.h>
 #include <stdlib.h>
 
-NoMBC::NoMBC(const char *romFile) : ACartridge(romFile) {
+NoMBC::NoMBC(File romFile) : ACartridge(romFile) {
     // Allocate space for the ROM, always 2 banks
     rom = (uint8_t *)malloc(ROM_BANK_SIZE * 2 * sizeof(uint8_t));
 
     // Write the ROM data to memory
     Serial.println("Loading ROM into memory...");
-    File dataFile = SD.open(romFile);
-    if (dataFile) {
-        for (uint16_t i = 0; i < ROM_BANK_SIZE * 2; i++) {
-            rom[i] = dataFile.read();
-        }
-    } else {
-        Serial.printf("Could not open rom file %s\n", romFile);
+    for (uint16_t i = 0; i < ROM_BANK_SIZE * 2; i++) {
+        rom[i] = romFile.read();
     }
     Serial.println();
     Serial.println("ROM Loaded!");

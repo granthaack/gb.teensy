@@ -23,7 +23,7 @@
 
 class ACartridge {
    public:
-    ACartridge(const char* romFile);
+    ACartridge(File romFile);
     // Abstract readByte. It should be defined in every MBC
     virtual uint8_t readByte(uint16_t addr) = 0;
     // Abstract writeByte. It should be defined in every MBC
